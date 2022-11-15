@@ -1,40 +1,61 @@
 pipeline {
     agent any
+    options {disableConcurrentBuilds()}
     environment {
-	PROJECT_ID = "vinaydevops" 
+        GOOGLE_PROJECT_ID = "vinaydevops" 
+        GOOGLE_PROJECT_NAME = "vinaydevops"
         CREDENTIALS_ID = credentials('sc_jenkins_terraform')
      }
-   	tools {
+    parameters { 
+      choice(name: 'ENTER', choices: ['dev', 'pre', 'pro'], description: 'Select the environment')
+      choice(name: 'ACTION', choices: ['', 'plan-apply', 'destroy'], description: 'Select the action')
+    }
+	tools {
         terraform 'jenkins_terraform'
     }
 	
     stages{
          stage ("terraform init") {
             steps {
-               sh  'terraform init'
+                sh 'terraform init'
             }
         }
         stage ("terraform fmt") {
             steps {
-                 sh 'terraform fmt'
+                sh 'terraform fmt'
             }
         }
         stage ("terraform validate") {
             steps {
-                 sh 'terraform validate'
+                sh 'terraform validate'
             }
         }
         stage ("terrafrom plan") {
             steps {
-                 sh 'terraform plan'
+                sh 'terraform plan'
             }
         }
         
-     stage ("terrafrom apply") {
+        stage('Confirm the Action') {
             steps {
-               sh 'terraform destroy -auto-approve'
+                script {
+                    def userInput = input(id: 'confirm', message: params.ACTION + '?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Apply terraform', name: 'confirm'] ])
+                }
             }
         }
         
-  }  
+        stage('Terraform apply or destroy ----------------') {
+            steps {
+               sh 'echo "Deployment pipeline"'
+            script{  
+                if (params.ACTION == "destroy"){
+                       sh 'terraform destroy -auto-approve'
+                } else {
+                        sh 'terraform apply -auto-approve'  
+                }  // if
+
+            }
+            } 
+        }  
+   }  
 } 
