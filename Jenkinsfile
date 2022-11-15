@@ -6,11 +6,7 @@ pipeline {
         GOOGLE_PROJECT_NAME = "vinaydevops"
         CREDENTIALS_ID = credentials('sc_jenkins_terraform')
      }
-    parameters { 
-      choice(name: 'ENTER', choices: ['dev', 'pre', 'pro'], description: 'Select the environment')
-      choice(name: 'ACTION', choices: ['', 'plan-apply', 'destroy'], description: 'Select the action')
-    }
-	tools {
+   	tools {
         terraform 'jenkins_terraform'
     }
 	
@@ -36,26 +32,11 @@ pipeline {
             }
         }
         
-        stage('Confirm the Action') {
+     stage ("terrafrom apply") {
             steps {
-                script {
-                    def userInput = input(id: 'confirm', message: params.ACTION + '?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Apply terraform', name: 'confirm'] ])
-                }
+              sh 'cd terraform && terraform apply -auto-approve'
             }
         }
         
-        stage('Terraform apply or destroy ----------------') {
-            steps {
-               sh 'echo "Deployment pipeline"'
-            script{  
-                if (params.ACTION == "destroy"){
-                       sh 'cd terraform && terraform destroy -auto-approve'
-                } else {
-                         sh 'cd terraform && terraform apply -auto-approve'
-                }  // if
-
-            }
-            } 
-        }  
-   }  
+  }  
 } 
