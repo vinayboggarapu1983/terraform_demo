@@ -1,9 +1,7 @@
 pipeline {
     agent any
-    options {disableConcurrentBuilds()}
     environment {
-        GOOGLE_PROJECT_ID = "vinaydevops" 
-        GOOGLE_PROJECT_NAME = "vinaydevops"
+	PROJECT_ID = "vinaydevops" 
         CREDENTIALS_ID = credentials('sc_jenkins_terraform')
      }
    	tools {
