@@ -4,7 +4,7 @@ pipeline {
     environment {
         GOOGLE_PROJECT_ID = "vinaydevops" 
         GOOGLE_PROJECT_NAME = "vinaydevops"
-        CREDENTIALS_ID = credentials('vinaygcpdevops')
+        CREDENTIALS_ID = credentials('sc_jenkins_terraform')
      }
     parameters { 
       choice(name: 'ENTER', choices: ['dev', 'pre', 'pro'], description: 'Select the environment')
