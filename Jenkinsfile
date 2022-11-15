@@ -49,9 +49,9 @@ pipeline {
                sh 'echo "Deployment pipeline"'
             script{  
                 if (params.ACTION == "destroy"){
-                       sh destroy -auto-approve'
+                       sh 'cd terraform && terraform destroy -auto-approve'
                 } else {
-                        sh apply -auto-approve'  
+                         sh 'cd terraform && terraform apply -auto-approve'
                 }  // if
 
             }
